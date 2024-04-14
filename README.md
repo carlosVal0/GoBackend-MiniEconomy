@@ -25,5 +25,6 @@ MiniEconomy is a personal project whose objective is mainly educative. MiniEcono
  - The monetary transactions module should use Gorm transactions at repository level to enable rollbacks in error cases
  - Complete transactions module
 - SMTP Module to send emails to users
-- Generate PDF with transaction details (Probably just to educative purposes this will be developed with Spring Boot with Jasper Reports, that microservice would receive the transaction details through an AMQP messaging queue and then send it to email through SMTP, PDT: Yes, probably the SMTP module itself would be better held here) 
+- Generate PDF with transaction details (Probably just to educative purposes this will be developed with Spring Boot with Jasper Reports, that microservice would receive the transaction details through an AMQP messaging queue and then send it to email through SMTP, PDT: Yes, probably the SMTP module itself would be better held here)  
+- Create a service to get a single account
   

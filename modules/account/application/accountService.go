@@ -1,6 +1,7 @@
 package application
 
 import (
+	"errors"
 	"math/rand"
 
 	"github.com/carlosVal0/miniEconomyGoBackend/modules/account/domain/entities"
@@ -43,4 +44,27 @@ func GenerateAccountSeq() string {
 	}
 
 	return string(b)
+}
+
+func RechargeAccount(userId int, accNumber string, amount float64) error {
+
+	accs, err := GetAccountsService(userId)
+	if err != nil {
+		return err
+	}
+	var selectedAccount *entities.Account
+	for _, account := range accs {
+		if account.AccountNumber == accNumber {
+			selectedAccount = &account
+		}
+	}
+
+	if selectedAccount == nil {
+		return errors.New("not found account")
+	}
+
+	selectedAccount.CurrentBalance += amount
+	repErr := repository.UpdateAccount(selectedAccount)
+	return repErr
+
 }

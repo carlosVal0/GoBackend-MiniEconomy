@@ -30,6 +30,8 @@ func main() {
 	router.POST("/decode", authInfraestructure.DecodingController)
 	router.POST("/account", accountInfraestructure.CreateAccount)
 	router.GET("/accounts", accountInfraestructure.GetAccounts)
+	router.POST("/recharge", accountInfraestructure.RechargeAccount)
+
 	router.Run("localhost:8080")
 
 }

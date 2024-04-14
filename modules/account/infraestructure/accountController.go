@@ -14,6 +14,11 @@ type AccountDto struct {
 	CurrentBalance float64 `json:"balance"`
 }
 
+type RechargeDto struct {
+	AccountNumber string  `json:"accountNumber"`
+	Amount        float64 `json:"amount"`
+}
+
 func CreateAccount(ctx *gin.Context) {
 
 	token := ctx.GetHeader("Authorization")
@@ -78,6 +83,37 @@ func GetAccounts(ctx *gin.Context) {
 	accsDto := MapAccountDto(accs)
 
 	ctx.IndentedJSON(http.StatusOK, accsDto)
+
+}
+
+func RechargeAccount(ctx *gin.Context) {
+	claims := TokenHandle(ctx)
+	if claims == nil {
+		ctx.IndentedJSON(http.StatusBadRequest, gin.H{
+			"message": "empty auth header",
+		})
+		return
+	}
+	var recharge RechargeDto
+	err := ctx.BindJSON(&recharge)
+	if err != nil {
+		ctx.IndentedJSON(http.StatusBadRequest, gin.H{
+			"message": "Wrong request",
+		})
+		return
+	}
+
+	recError := application.RechargeAccount(claims.Id, recharge.AccountNumber, recharge.Amount)
+	if recError != nil {
+		ctx.IndentedJSON(http.StatusBadRequest, gin.H{
+			"message": "Error recharging account",
+		})
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusOK, gin.H{
+		"message": "Succesfull recharge",
+	})
 
 }
 
