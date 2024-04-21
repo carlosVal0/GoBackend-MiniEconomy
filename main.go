@@ -5,8 +5,8 @@ import (
 	"os"
 
 	accountInfraestructure "github.com/carlosVal0/miniEconomyGoBackend/modules/account/infraestructure"
-	authRepository "github.com/carlosVal0/miniEconomyGoBackend/modules/authentication/domain/repository"
 	authInfraestructure "github.com/carlosVal0/miniEconomyGoBackend/modules/authentication/infraestructure"
+	"github.com/carlosVal0/miniEconomyGoBackend/modules/core/database"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -15,7 +15,7 @@ func Init() {
 	godotenv.Load()
 	logger := log.Default()
 	logger.SetPrefix("main-minieconomy at ")
-	authRepository.Connect()
+	database.Connect()
 	os.Setenv("TZ", "America/Bogota")
 }
 

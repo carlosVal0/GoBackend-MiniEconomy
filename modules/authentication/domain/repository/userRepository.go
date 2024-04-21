@@ -1,43 +1,15 @@
 package repository
 
 import (
-	"fmt"
-	"log"
-	"os"
 	"time"
 
-	accountDomain "github.com/carlosVal0/miniEconomyGoBackend/modules/account/domain/entities"
 	authDomain "github.com/carlosVal0/miniEconomyGoBackend/modules/authentication/domain/entities"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"github.com/carlosVal0/miniEconomyGoBackend/modules/core/database"
 )
 
-var dbBean *gorm.DB
-
-func Connect() {
-
-	dbUser := os.Getenv("DB_USER")
-	dbPasswd := os.Getenv("DB_PASSWD")
-	dbHost := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
-	connString := fmt.Sprintf("%v:%v@tcp(%v)/%v?parseTime=true", dbUser, dbPasswd, dbHost, dbName)
-	db, err := gorm.Open(mysql.Open(connString), &gorm.Config{})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	dbBean = db
-	dbBean.AutoMigrate(&authDomain.User{}, &accountDomain.Account{}, &accountDomain.Transaction{})
-	logger := log.Default()
-	logger.Println("Connected to " + dbBean.Name())
-
-}
-
-func GetDbBean() *gorm.DB {
-	return dbBean
-}
-
 func CreateUser(u *authDomain.User) error {
+
+	dbBean := database.GetDbBean()
 
 	result := dbBean.Select("name", "email", "password", "orgId").Create(&u)
 	return result.Error
@@ -45,6 +17,9 @@ func CreateUser(u *authDomain.User) error {
 }
 
 func GetUser(id int) (*authDomain.User, error) {
+
+	dbBean := database.GetDbBean()
+
 	var user authDomain.User
 	result := dbBean.First(&user, id).Omit("password")
 	if result.Error != nil {
@@ -56,11 +31,17 @@ func GetUser(id int) (*authDomain.User, error) {
 }
 
 func DeleteUser(id int) error {
+
+	dbBean := database.GetDbBean()
+
 	result := dbBean.Delete(&authDomain.User{}, id)
 	return result.Error
 }
 
 func UpdateUser(u *authDomain.User) (*authDomain.User, error) {
+
+	dbBean := database.GetDbBean()
+
 	dbBean.Model(&u).Updates(&authDomain.User{
 		ID:        u.ID,
 		Name:      u.Name,
@@ -76,6 +57,8 @@ func UpdateUser(u *authDomain.User) (*authDomain.User, error) {
 }
 
 func GetUserByEmailPasswd(email string, password string) (*authDomain.User, error) {
+
+	dbBean := database.GetDbBean()
 
 	var user *authDomain.User
 	result := dbBean.Where(" email = ? AND password = ?", email, password).First(&user)
