@@ -22,6 +22,19 @@ func GetAccounts(userId int) ([]entities.Account, error) {
 	return accounts, nil
 }
 
+func GetAccountByNumber(accNumber string) (*entities.Account, error) {
+
+	var account entities.Account
+	db := database.GetDbBean()
+	result := db.Model(&entities.Account{}).Where("account_number = ?", accNumber).First(&account)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &account, nil
+
+}
+
 func UpdateAccount(acc *entities.Account) error {
 	db := database.GetDbBean()
 	result := db.Model(&acc).Select("current_balance", "status").Updates(&acc)

@@ -28,7 +28,7 @@ func Connect() {
 		PreferSimpleProtocol: true,
 	}), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   dbSchema,
+			TablePrefix:   dbSchema + ".",
 			SingularTable: false,
 		},
 	})

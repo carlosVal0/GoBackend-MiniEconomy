@@ -31,6 +31,7 @@ func main() {
 	router.POST("/account", accountInfraestructure.CreateAccount)
 	router.GET("/accounts", accountInfraestructure.GetAccounts)
 	router.POST("/recharge", accountInfraestructure.RechargeAccount)
+	router.POST("/transaction", accountInfraestructure.TransferFunds)
 
 	router.Run("localhost:8080")
 
